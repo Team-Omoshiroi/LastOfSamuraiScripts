@@ -27,7 +27,7 @@ namespace Characters.Player.StateMachines.TargetUnlock.SubStateMachines
             
             if (!animationState.IsTag("UnEquip")) return;
 
-            if (animationState.normalizedTime < 0.8f) return;
+            if (!(0.8f < animationState.normalizedTime)) return;
 
             if (playerStateMachine.MoveInput == Vector2.zero)
             {

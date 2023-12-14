@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Characters.Player.StateMachines.TargetUnlock.SubStateMachines
 {
     public class PlayerTargetUnlockWeaponOnState : PlayerTargetUnlockState
@@ -25,7 +27,7 @@ namespace Characters.Player.StateMachines.TargetUnlock.SubStateMachines
             
             if (!animationState.IsTag("Equip")) return;
             
-            if (!(animationState.normalizedTime >= 0.8f)) return;
+            if (!(0.8f < animationState.normalizedTime)) return;
 
             playerStateMachine.ChangeState(playerStateMachine.TargetUnlockIdleState);
         }

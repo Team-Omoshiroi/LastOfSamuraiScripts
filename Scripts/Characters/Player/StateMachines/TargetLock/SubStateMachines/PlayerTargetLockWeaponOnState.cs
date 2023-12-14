@@ -25,9 +25,9 @@ namespace Characters.Player.StateMachines.TargetLock.SubStateMachines
             
             var animationState = playerStateMachine.Player.Animator.GetCurrentAnimatorStateInfo(0);
             
-            if (!animationState.IsTag("Equigp")) return;
+            if (!animationState.IsTag("Equip")) return;
             
-            if (!(animationState.normalizedTime >= 0.8f)) return;
+            if (!(0.8f < animationState.normalizedTime)) return;
 
             playerStateMachine.ChangeState(playerStateMachine.TargetLockIdleState);
         }

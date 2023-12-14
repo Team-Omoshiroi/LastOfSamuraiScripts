@@ -28,6 +28,10 @@ namespace Characters.Player
         [SerializeField] private string equipParameterName = "Equip";
         [SerializeField] private string unEquipParameterName = "UnEquip";
         
+        [SerializeField] private string dieParameterName = "Die";
+        [SerializeField] private string hitParameterName = "Hit";
+        [SerializeField] private string dieIndexParameterName = "DieIndex";
+        
         public int TargetLockParameterName { get; private set; }
         public int WeaponParameterHash { get; private set; }
         
@@ -50,6 +54,10 @@ namespace Characters.Player
         public int ComboParameterHash { get; private set; }
         public int EquipParameterHash { get; private set; }
         public int UnEquipParameterHash { get; private set; }
+        
+        public int DieParameterHash { get; private set; }
+        public int DieIndexParameterHash { get; private set; }
+        public int HitParameterHash { get; private set; }
 
         public void Initialize()
         {
@@ -76,6 +84,11 @@ namespace Characters.Player
             
             EquipParameterHash = Animator.StringToHash(equipParameterName);
             UnEquipParameterHash = Animator.StringToHash(unEquipParameterName);
+
+            DieParameterHash = Animator.StringToHash(dieParameterName);
+            DieIndexParameterHash = Animator.StringToHash(dieIndexParameterName);
+
+            HitParameterHash = Animator.StringToHash(hitParameterName);
         }
     }
 }

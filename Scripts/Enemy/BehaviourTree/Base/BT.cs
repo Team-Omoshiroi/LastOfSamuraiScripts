@@ -1,11 +1,15 @@
+using Characters.Player;
 using System.Collections;
 using System.Collections.Generic;
+using Characters.Player;
 using UnityEngine;
 using UnityEngine.AI;
 
 public abstract class BT : MonoBehaviour
 {
     private BTNode root;
+    private EnemyStatusController enemyStats;
+    private PlayerStatusController playerStats;
 
     [SerializeField] private Transform[] waypoints;
     [SerializeField] private Animator anime;
@@ -24,6 +28,7 @@ public abstract class BT : MonoBehaviour
     [SerializeField] private float frequency_SA = 0.3f;
     [SerializeField] private float unstoppableTime = 0.4f;
     [SerializeField] protected bool isUnstoppable = false;
+    [SerializeField] private EnemyWeapon[] weapons;
 
     [Header("사망/피격 관련")]
     [SerializeField] private float groggyTime = 1f;
@@ -64,31 +69,41 @@ public abstract class BT : MonoBehaviour
     public float RecognitionTime { get { return recognitionTime; } protected set { recognitionTime = value; } }
     public float CoolDownTime_SA { get { return coolDownTime_SA; } protected set { coolDownTime_SA = value; } }
     public float Frequency_SA { get { return frequency_SA; } protected set { frequency_SA = value; } }
-    public float Frequency_parrying{ get { return frequency_parrying; } protected set { frequency_parrying = value; } }
+    public float Frequency_parrying { get { return frequency_parrying; } protected set { frequency_parrying = value; } }
     public float ParryingTime { get { return parryingTime; } protected set { parryingTime = value; } }
-    public float GroggyTime { get { return groggyTime; } protected set {groggyTime = value; } }
+    public float GroggyTime { get { return groggyTime; } protected set { groggyTime = value; } }
     public float HitDelayTime { get { return hitDelayTime; } protected set { hitDelayTime = value; } }
     public float DefensibleTime { get { return defensibleTime; } protected set { defensibleTime = value; } }
     public float UnstoppableTime { get { return unstoppableTime; } protected set { unstoppableTime = value; } }
-    public bool IsDead { get { return isDead; } protected set { isDead = value; } }
+    public bool IsDead { get { return isDead; } set { isDead = value; } }
     public bool IsDefensible { get { return isDefensible; } set { isDefensible = value; } }
     public bool IsUnstoppable { get { return isUnstoppable; } set { isUnstoppable = value; } }
     public bool IsParrying { get { return isParrying; } set { isParrying = value; } }
+    public bool IsArmed { get; set; }
 
     public BTNode Root { get { return root; } protected set { root = value; } }
+    public EnemyStatusController EnemyStats { get { return enemyStats; } protected set { enemyStats = value; } }
+    public PlayerStatusController PlayerStats { get { return playerStats; } protected set { playerStats = value; } }
 
     // Start is called before the first frame update
     protected void Start()
     {
+        enemyStats = GetComponent<EnemyStatusController>();
+        playerStats = PlayerStatusController.Instance;
         animeParams = anime.parameters;
+        SetWeaponDamage();
         SetupTree();
     }
 
     // Update is called once per frame
     protected void Update()
     {
+        PrepareWeapon();
+
         if (root != null)
+        {
             root.Evaluate();
+        }
     }
 
     protected abstract void SetupTree();
@@ -158,5 +173,37 @@ public abstract class BT : MonoBehaviour
             this.coolDownTime_SA = coolDownTime_SA;
         if(frequency_SA >= 0)
             this.frequency_SA = frequency_SA;
+    }
+
+    public void PrepareWeapon()
+    {
+        if (!IsArmed)
+        {
+            ResetAnimations();
+            anime.Rebind();
+            anime.SetBool("PrepareWeapon", true);
+            IsArmed = true;
+        }
+    }
+
+    public void Dead()
+    {
+        isDead = true;
+    }
+
+    private void SetWeaponDamage()
+    {
+        foreach (EnemyWeapon weapon in weapons)
+        {
+            weapon.Damage = enemyStats.AP;
+        }
+    }
+
+    public void ActivateWeapon()
+    {
+        foreach (EnemyWeapon weapon in weapons)
+        {
+            weapon.isAttacking = true;
+        }
     }
 }

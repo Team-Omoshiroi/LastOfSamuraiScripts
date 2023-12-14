@@ -25,19 +25,23 @@ MonoBehaviour:
       <ComboStateIndex>k__BackingField: 1
       <MinComboTransitionTime>k__BackingField: 0.2
       <MaxComboTransitionTime>k__BackingField: 0.5
-      <Damage>k__BackingField: 0
+      <Damage>k__BackingField: 20
+      <Effect>k__BackingField: {fileID: 0}
     - <AttackName>k__BackingField: Normal2
       <ComboStateIndex>k__BackingField: 2
       <MinComboTransitionTime>k__BackingField: 0.2
       <MaxComboTransitionTime>k__BackingField: 0.4
-      <Damage>k__BackingField: 0
+      <Damage>k__BackingField: 20
+      <Effect>k__BackingField: {fileID: 0}
     - <AttackName>k__BackingField: Normal3
       <ComboStateIndex>k__BackingField: 3
       <MinComboTransitionTime>k__BackingField: 0.2
       <MaxComboTransitionTime>k__BackingField: 0.4
-      <Damage>k__BackingField: 0
+      <Damage>k__BackingField: 30
+      <Effect>k__BackingField: {fileID: 0}
     - <AttackName>k__BackingField: Normal4
       <ComboStateIndex>k__BackingField: -1
       <MinComboTransitionTime>k__BackingField: 0
       <MaxComboTransitionTime>k__BackingField: 0.8
-      <Damage>k__BackingField: 0
+      <Damage>k__BackingField: 50
+      <Effect>k__BackingField: {fileID: 0}

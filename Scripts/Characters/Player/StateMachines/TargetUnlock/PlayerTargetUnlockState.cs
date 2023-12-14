@@ -16,9 +16,7 @@ namespace Characters.Player.StateMachines.TargetUnlock
         }
 
         #region InputActionMethod
-        /// 걷기 키가 입력되지 않으면 IdleState로 전환합니다.
-        /// </summary>
-        /// <param name="obj"></param>
+        
         protected override void OnMoveCanceled(InputAction.CallbackContext obj)
         {
             playerStateMachine.ChangeState(playerStateMachine.TargetUnlockIdleState);

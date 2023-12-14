@@ -1,3 +1,4 @@
+using Characters.Player;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -45,9 +46,34 @@ public class CheckDetectPlayer : BTNode
             //타겟이 활성화 된 상태라면
             if (target.gameObject.activeSelf)
             {
+                //타겟이 사망했을 때 추격을 중단한다.
+                if (target.TryGetComponent<HealthModule>(out HealthModule health))
+                {
+                    if (health.IsDead)
+                    {
+                        isChasing = false;
+                        target = null;
+                        recognitionCounter = 0;
+                        root.ClearData(StaticVariables.targetText);
+                        state = eBTNodeState.Failure;
+                        return state;
+                    }
+                }
+
                 //추격 트리거가 활성화되었다면 Success.
                 if (isChasing)
                 {
+                    //타겟이 도달할 수 없는 위치에 있다면 추적을 중단하도록 하고 Failure.
+                    if (!agent.CalculatePath(target.position, agent.path))
+                    {
+                        isChasing = false;
+                        target = null;
+                        recognitionCounter = 0;
+                        root.ClearData(StaticVariables.targetText);
+                        state = eBTNodeState.Failure;
+                        return state;
+                    }
+
                     root.SetData(StaticVariables.targetText, target);
                     state = eBTNodeState.Success;
                 }
@@ -76,7 +102,7 @@ public class CheckDetectPlayer : BTNode
                         //아직 인지 시간에 도달하지 않았다면 Running.
                         else
                         {
-                            state = eBTNodeState.Running;
+                            state = eBTNodeState.Failure;
                         }
                     }
                 }
@@ -116,8 +142,18 @@ public class CheckDetectPlayer : BTNode
                 //감지된 대상이 존재한다면 가장 처음 감지한 대상을 타겟으로 지정하고 Success.
                 if (colliders.Length > 0)
                 {
-                    root.SetData(StaticVariables.targetText, colliders[0].transform);
-                    state = eBTNodeState.Success;
+                    for (int i = 0; i < colliders.Length; i++)
+                    {
+                        if (colliders[i].TryGetComponent<HealthModule>(out HealthModule health))
+                        {
+                            if (!health.IsDead)
+                            {
+                                root.SetData(StaticVariables.targetText, colliders[i].transform);
+                                state = eBTNodeState.Success;
+                            }
+                        }
+                    }
+
                 }
                 //아직까지도 타겟을 찾을 수 없다면 Failure.
                 else

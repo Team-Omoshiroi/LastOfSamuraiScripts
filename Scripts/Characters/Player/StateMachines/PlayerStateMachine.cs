@@ -39,6 +39,8 @@ namespace Characters.Player.StateMachines
 
         public PlayerTargetUnlockJumpState TargetUnlockJumpState { get; }
         public PlayerTargetUnlockLandState TargetUnlockLandState { get; }
+        
+        public PlayerDieState PlayerDieState { get; }
 
         // Crouch
         public float TargetCrouch { get; set; }
@@ -92,6 +94,8 @@ namespace Characters.Player.StateMachines
             // etc
             TargetUnlockJumpState = new PlayerTargetUnlockJumpState(this);
             TargetUnlockLandState = new PlayerTargetUnlockLandState(this);
+            
+            PlayerDieState = new PlayerDieState(this);
             
             if (Camera.main != null) MainCameraTransform = Camera.main.transform;
 

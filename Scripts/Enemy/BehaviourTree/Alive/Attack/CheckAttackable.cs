@@ -1,3 +1,4 @@
+using Characters.Player;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -40,11 +41,25 @@ public class CheckAttackable : BTNode
         //현재 타겟이 설정되어 있다면
         if (target != null)
         {
-            //타겟이 활성화 상태일 때
+            //타겟이 활성화 상태이거나 살아 있을 때
             if (target.gameObject.activeSelf)
-            {
-                //공격 범위보다 가깝다면 Success
-                if(Vector3.Distance(target.transform.position, transform.position) <= attackRange)
+            {            
+                //타겟이 사망했다면 공격을 중단한다.
+                if (target.TryGetComponent<HealthModule>(out HealthModule health))
+                {
+                    if (health.IsDead)
+                    {
+                        //Target 리셋, Failure.
+                        target = null;
+                        root.ClearData(StaticVariables.targetText);
+
+                        state = eBTNodeState.Failure;
+                        return state;
+                    }
+                }
+
+                //공격 범위 내에 있다면 Success
+                if (Vector3.Distance(target.transform.position, transform.position) <= attackRange && Vector3.Distance(target.transform.position, transform.position) > (attackRange * 0.8f))
                 {
                     state = eBTNodeState.Success;
                 }
@@ -126,6 +141,11 @@ public class CheckAttackable : BTNode
         else if (!isWaiting) 
         { 
             root.ClearData(StaticVariables.comboText); 
+        }
+
+        if(state == eBTNodeState.Success)
+        {
+            bt.ActivateWeapon();
         }
 
         return state;

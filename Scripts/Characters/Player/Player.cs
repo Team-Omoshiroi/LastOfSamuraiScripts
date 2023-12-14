@@ -15,16 +15,20 @@ namespace Characters.Player
     
         [field: Header("Animations")]
         [field: SerializeField] public PlayerAnimationData AnimationData { get; private set; }
+        
+        [field: Header("Weapon")]
+        [field: SerializeField] public Weapon Weapon { get; set; }
 
+        
+        [field: Header("Else")]
         public Rigidbody Rigidbody { get; private set; }
         public Animator Animator { get; private set; }
         public PlayerInputModule InputModule { get; private set; }
         public ForceReceiver ForceReceiver { get; private set; }
         public CharacterController Controller { get; private set; }
         public TargetLockModule TargetLockModule { get; private set; }
-        public CameraFollowModule cameraFollowModule;
-        public EffectModule effectModule;
-        
+        public CameraFollowModule CameraFollowModule { get; private set; }
+        public EffectModule EffectModule { get; private set; }
         public PlayerStateMachine stateMachine;
 
         public ItemPickUp PickUP ;
@@ -43,7 +47,7 @@ namespace Characters.Player
             Controller = GetComponent<CharacterController>();
             ForceReceiver = GetComponent<ForceReceiver>();
             PickUP = GetComponent<ItemPickUp>();
-            effectModule = GetComponent<EffectModule>();
+            EffectModule = GetComponent<EffectModule>();
             
             stateMachine = new PlayerStateMachine(this);
 
@@ -61,11 +65,11 @@ namespace Characters.Player
             stateMachine.HandleInput();
             stateMachine.Update();
 
-            currentState.text = $"Current State : {stateMachine.currentState}";
-            moveInput.text = $"MoveInput | {stateMachine.MoveInput}";
-            moveDir.text = $"MoveDir | {stateMachine.MoveDirection}";
-            lookInput.text = $"LookInput {stateMachine.LookInput}";
-            lookDir.text = $"LookDir | {stateMachine.LookDirection}";
+            //currentState.text = $"Current State : {stateMachine.currentState}";
+            //moveInput.text = $"MoveInput | {stateMachine.MoveInput}";
+            //moveDir.text = $"MoveDir | {stateMachine.MoveDirection}";
+            //lookInput.text = $"LookInput {stateMachine.LookInput}";
+            //lookDir.text = $"LookDir | {stateMachine.LookDirection}";
         }
 
         private void FixedUpdate()

@@ -27,17 +27,28 @@ namespace Characters.Player.StateMachines.TargetLock
         }
 
         #region InputActionMethod
-        
+        /// <summary>
+        /// 걷기 키가 입력되지 않으면 CombatIdleState 전환합니다.
+        /// </summary>
+        /// <param name="obj"></param>
         protected override void OnMoveCanceled(InputAction.CallbackContext obj)
         {
             playerStateMachine.ChangeState(playerStateMachine.TargetLockIdleState);
         }
         
+        /// <summary>
+        /// 걷기 키가 입력되면 CombatMoveState 전환합니다.
+        /// </summary>
+        /// <param name="obj"></param>
         protected override void OnMoveStarted(InputAction.CallbackContext obj)
         {
             playerStateMachine.ChangeState(playerStateMachine.TargetLockMoveState);
         }
         
+        /// <summary>
+        /// 키를 짧게 눌렀다 떼면 CombatDodgeState로 전환합니다.
+        /// </summary>
+        /// <param name="obj"></param>
         protected override void OnSlidePerformed(InputAction.CallbackContext obj)
         {
             if (isDodging) return;
@@ -48,7 +59,12 @@ namespace Characters.Player.StateMachines.TargetLock
         {
             playerStateMachine.ChangeState(playerStateMachine.TargetLockMoveFastState);
         }
-        
+
+        /// <summary>
+        /// 걷기 키와 달리기 키가 입력되지 않으면 CombatIdleState,
+        /// 달리기 키만 입력되지 않으면 CombatMoveState 전환합니다.
+        /// </summary>
+        /// <param name="obj"></param>
         protected override void OnMoveFastCanceled(InputAction.CallbackContext obj)
         {
             if (playerStateMachine.MoveInput == Vector2.zero)
@@ -61,6 +77,10 @@ namespace Characters.Player.StateMachines.TargetLock
             }
         }
         
+        /// <summary>
+        /// Combat 키 입력 시 NormalIdleState 전환합니다.
+        /// </summary>
+        /// <param name="obj"></param>
         protected override void OnWeaponStarted(InputAction.CallbackContext obj)
         {
             if (playerStateMachine.Player.Animator.GetBool(playerStateMachine.Player.AnimationData.WeaponParameterHash))
@@ -79,6 +99,11 @@ namespace Characters.Player.StateMachines.TargetLock
             }
         }
         
+        protected override void OnAttackPerformed(InputAction.CallbackContext obj)
+        {
+            playerStateMachine.ChangeState(playerStateMachine.TargetLockComboAttackState);
+        }
+
         protected override void OnTargetLockStarted(InputAction.CallbackContext obj)
         {
             if (playerStateMachine.Player.TargetLockModule.currentTarget)
@@ -101,23 +126,12 @@ namespace Characters.Player.StateMachines.TargetLock
                 playerStateMachine.ChangeState(playerStateMachine.TargetUnlockMoveFastState);
             }
         }
-        
-        protected override void OnAttackPerformed(InputAction.CallbackContext obj)
-        {
-            if (playerStateMachine.Player.Animator.GetBool(playerStateMachine.Player.AnimationData.WeaponParameterHash))
-            {
-                playerStateMachine.ChangeState(playerStateMachine.TargetLockComboAttackState);
-            }
-        }
-        
+
         protected override void OnDefencePerformed(InputAction.CallbackContext obj)
         {
-            if (playerStateMachine.Player.Animator.GetBool(playerStateMachine.Player.AnimationData.WeaponParameterHash))
-            {
-                playerStateMachine.Player.Animator.SetBool(playerStateMachine.Player.AnimationData.DefenceParameterHash, true);
-            }
+            playerStateMachine.Player.Animator.SetBool(playerStateMachine.Player.AnimationData.DefenceParameterHash, true);
         }
-        
+
         protected override void OnDefenceCanceled(InputAction.CallbackContext obj)
         {
             playerStateMachine.Player.Animator.SetBool(playerStateMachine.Player.AnimationData.DefenceParameterHash, false);
@@ -154,5 +168,24 @@ namespace Characters.Player.StateMachines.TargetLock
             
             playerStateMachine.Player.Animator.SetFloat(playerStateMachine.Player.AnimationData.MoveDirYParameterHash, playerStateMachine.SmoothVector.y);
         }
+       
+       protected static float GetNormalizedTime(Animator animator, string tag)
+       {
+           var currentInfo = animator.GetCurrentAnimatorStateInfo(0);
+           var nextInfo = animator.GetNextAnimatorStateInfo(0);
+
+           if (animator.IsInTransition(0) && nextInfo.IsTag(tag))
+           {
+               return nextInfo.normalizedTime;
+           }
+           else if (!animator.IsInTransition(0) && currentInfo.IsTag(tag))
+           {
+               return currentInfo.normalizedTime;
+           }
+           else
+           {
+               return 0f;
+           }
+       }
     }
 }

@@ -16,15 +16,16 @@ namespace Characters.Player.StateMachines
         protected bool animationMovement;
         protected bool isDodging;
         protected bool rotateBreak;
+        public float parryingTime;
 
         protected PlayerBaseState(PlayerStateMachine stateMachine)
         {
             playerStateMachine = stateMachine;
             player = playerStateMachine.Player;
-            targetLockModule = playerStateMachine.Player.TargetLockModule;
-            animator = playerStateMachine.Player.Animator;
-            playerActions = playerStateMachine.Player.InputModule.PlayerActions;
-            playerAnimationData = playerStateMachine.Player.AnimationData;
+            targetLockModule = player.TargetLockModule;
+            animator = player.Animator;
+            playerActions = player.InputModule.PlayerActions;
+            playerAnimationData = player.AnimationData;
             animationMovement = true;
             rotateBreak = false;
         }
@@ -54,7 +55,12 @@ namespace Characters.Player.StateMachines
         public virtual void Update()
         {
             GetMoveDirection();
-        }
+
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                playerStateMachine.ChangeState(playerStateMachine.PlayerDieState);
+            }
+        } 
 
         public virtual void LateUpdate() { }
 
@@ -74,11 +80,12 @@ namespace Characters.Player.StateMachines
             playerActions.Defence.canceled += OnDefenceCanceled;
             
             playerActions.Attack.performed += OnAttackPerformed;
+
+            playerActions.Interaction.performed += player.PickUP.Interect;
         }
 
         protected virtual void RemoveInputActionsCallbacks()
         {
-            
             playerActions.Move.canceled -= OnMoveCanceled;
             playerActions.Move.started -= OnMoveStarted;
             playerActions.MoveFast.performed -= OnMoveFastPerformed;
@@ -92,6 +99,8 @@ namespace Characters.Player.StateMachines
             playerActions.Defence.performed -= OnDefencePerformed;
             
             playerActions.Attack.performed -= OnAttackPerformed;
+
+            playerActions.Interaction.performed -= player.PickUP.Interect;
         }
 
         protected virtual void OnMoveCanceled(InputAction.CallbackContext obj) { }
@@ -157,18 +166,20 @@ namespace Characters.Player.StateMachines
         /// </summary>
         private void Move()
         {
-            switch (animationMovement)
-            {
-                case true:
-                    player.Controller.Move((player.Animator.deltaPosition) * Time.deltaTime);
-                    break;
-                case false:
-                    player.Controller.Move(
-                        (playerStateMachine.MoveDirection + playerStateMachine.Player.ForceReceiver.Movement)
-                        * Time.deltaTime
-                    );
-                    break;
-            }
+            player.Controller.Move((player.Animator.deltaPosition) * Time.deltaTime);
+            
+            // switch (animationMovement)
+            // {
+            //     case true:
+            //         player.Controller.Move((player.Animator.deltaPosition) * Time.deltaTime);
+            //         break;
+            //     case false:
+            //         player.Controller.Move(
+            //             (playerStateMachine.MoveDirection + playerStateMachine.Player.ForceReceiver.Movement)
+            //             * Time.deltaTime
+            //         );
+            //         break;
+            // }
         }
         
         /// <summary>

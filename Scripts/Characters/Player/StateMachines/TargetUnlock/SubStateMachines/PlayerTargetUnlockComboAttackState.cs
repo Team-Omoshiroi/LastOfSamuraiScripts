@@ -19,6 +19,9 @@ namespace Characters.Player.StateMachines.TargetUnlock.SubStateMachines
 
             var comboIndex = playerStateMachine.ComboIndex;
             attackInfoData = playerStateMachine.Player.Data.AttackData.GetAttackInfo(comboIndex);
+            
+            player.Weapon.SetAttack(attackInfoData.Damage);
+            
             playerStateMachine.Player.Animator.SetInteger(playerStateMachine.Player.AnimationData.ComboParameterHash, comboIndex);
         }
 
@@ -26,7 +29,8 @@ namespace Characters.Player.StateMachines.TargetUnlock.SubStateMachines
         {
             base.Exit();
             StopAnimationWithBool(playerStateMachine.Player.AnimationData.ComboAttackParameterHash);
-
+            player.Weapon.InitAttack();
+            
             playerStateMachine.IsAttacking = false;
             
             if (!alreadyApplyCombo)
@@ -45,6 +49,7 @@ namespace Characters.Player.StateMachines.TargetUnlock.SubStateMachines
             {
                 if (alreadyApplyCombo && (attackInfoData.MinComboTransitionTime <= normalizedTime))
                 {
+                    player.Weapon.SetAttack(attackInfoData.Damage);
                     playerStateMachine.ComboIndex = attackInfoData.ComboStateIndex;
                     playerStateMachine.ChangeState(playerStateMachine.TargetUnlockComboAttackState);
                 }

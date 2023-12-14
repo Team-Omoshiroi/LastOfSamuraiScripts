@@ -13,7 +13,7 @@ public class PlayerStatusController : BaseStatusController
     public GameObject dropRoot;
     public StatSo stat;
     public static PlayerStatusController Instance { get; set; }
-    public Button Hit;
+
 
 
 
@@ -30,13 +30,12 @@ public class PlayerStatusController : BaseStatusController
            Instance = this;
          
         }
+        
         Init();
     }
 
     private void Start()
     {
-        Hit.onClick.AddListener(() => { TakeDamage(AP); });
-        
         UpdateUI();
     }
 

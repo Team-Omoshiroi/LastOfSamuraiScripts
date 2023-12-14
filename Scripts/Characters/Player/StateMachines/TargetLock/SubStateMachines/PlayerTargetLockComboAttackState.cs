@@ -19,21 +19,24 @@ namespace Characters.Player.StateMachines.TargetLock.SubStateMachines
 
             var comboIndex = playerStateMachine.ComboIndex;
             attackInfoData = playerStateMachine.Player.Data.AttackData.GetAttackInfo(comboIndex);
+            
+            player.Weapon.SetAttack(attackInfoData.Damage);
+            
             playerStateMachine.Player.Animator.SetInteger(playerStateMachine.Player.AnimationData.ComboParameterHash, comboIndex);
         }
 
         public override void Exit()
         {
             base.Exit();
-
+            StopAnimationWithBool(playerStateMachine.Player.AnimationData.ComboAttackParameterHash);
+            player.Weapon.InitAttack();
+            
             playerStateMachine.IsAttacking = false;
             
             if (!alreadyApplyCombo)
             {
                 playerStateMachine.ComboIndex = 0;
             }
-            
-            StopAnimationWithBool(playerStateMachine.Player.AnimationData.ComboAttackParameterHash);
         }
 
         public override void Update()

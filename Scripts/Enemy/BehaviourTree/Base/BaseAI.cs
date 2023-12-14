@@ -5,7 +5,6 @@ using UnityEngine.AI;
 
 public partial class BaseAI : BT
 {
-
     protected new void Start()
     {
         base.Start();
@@ -56,11 +55,11 @@ public partial class BaseAI : BT
     {
         if (CheckAttacked(hitInfo))
         {
-            if (CheckParryable(hitInfo))
-            {
-                TaskParry(hitInfo);
-                return;
-            }
+            //if (CheckParryable(hitInfo))
+            //{
+            //    TaskParry(hitInfo);
+            //    return;
+            //}
 
             TaskAttacked(hitInfo);
         }

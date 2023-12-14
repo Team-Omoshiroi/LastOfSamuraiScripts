@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Characters.Player;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "BaseWeaponeSO", menuName = "Item/BaseWeaponeSO")]

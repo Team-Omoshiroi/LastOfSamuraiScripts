@@ -31,18 +31,6 @@ namespace Characters.Player
             transform.position = Vector3.Lerp(transform.position, targetPosition, followSmoothing * Time.deltaTime);
         
             if(!lockedTarget) CameraTargetRotation(); else LookAtTarget();
-
-            if(!Input.GetKeyDown(KeyCode.Escape)) return;
-            if(cursorLocked)
-            {
-                Cursor.visible = true;
-                Cursor.lockState = CursorLockMode.None;
-            }
-            else
-            {
-                Cursor.visible = false;
-                Cursor.lockState = CursorLockMode.Locked;
-            }
         }
 
         private void CameraTargetRotation()

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class EnemyStatusController : BaseStatusController
 {
-    StatSo Enumystat;
+    [SerializeField] private StatSo Enemystat;
     public event Action OnDead;
 
 
@@ -15,11 +15,12 @@ public class EnemyStatusController : BaseStatusController
     }
     private void Init()
     {
-        AP = Enumystat.AttackPower;
-        MaxHp = Enumystat.Health;
-        CurHp = Enumystat.Health;
-        Dp = Enumystat.Defense;
+        AP = Enemystat.AttackPower;
+        MaxHp = Enemystat.Health;
+        CurHp = Enemystat.Health;
+        Dp = Enemystat.Defense;
     }
+
     public void TakeDamage(int damageAmount)
     {       
         float defenseEffect = Mathf.Min(Dp / 100f, maxDefenseEffect); 
@@ -37,7 +38,7 @@ public class EnemyStatusController : BaseStatusController
     }
     private void Die()
     {
-        
+        OnDead?.Invoke();
         Destroy(this.gameObject);
     }
 }

@@ -76,7 +76,7 @@ namespace Characters.Player.StateMachines.TargetLock
             }
 
             if (!closestTarget ) return null;
-            var height = (closestTarget.GetComponent<CapsuleCollider>().height) * (closestTarget.localScale.y);
+            var height = (closestTarget.GetComponent<BoxCollider>().size.y) * (closestTarget.localScale.y);
             var halfH = (height / 2) / 2;
             currentYOffset = height - halfH;
             if(zeroVertLook && currentYOffset > 1.6f && currentYOffset < 1.6f * 3) currentYOffset = 1.6f;

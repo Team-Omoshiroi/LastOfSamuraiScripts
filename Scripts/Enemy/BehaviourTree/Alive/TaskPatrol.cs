@@ -37,6 +37,8 @@ public class TaskPatrol : BTNode
 
     public override eBTNodeState Evaluate()
     {
+        agent.updateRotation = true;
+
         //대기 상태라면 대기 시간이 지날 때 까지 대기 상태를 유지한다.
         if (waiting)
         {
@@ -67,10 +69,12 @@ public class TaskPatrol : BTNode
                 currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
             }
             //추적 등의 사유로 경로를 벗어났다가 다시 순찰 상태로 복귀한 경우에도 다시 agent 의 목적지를 원래대로 바꾸어 주어야 한다.
-            else if (!animator.GetCurrentAnimatorStateInfo(0).IsName("WalkForward"))
+            else if (!animator.GetBool("WalkForward"))
             {
                 agent.destination = currentDestination;
                 bt.ResetAnimations();
+                animator.Rebind();
+
                 animator.SetBool("WalkForward", true);
             }
         }
